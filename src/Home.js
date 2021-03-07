@@ -34,6 +34,7 @@ class Home extends React.Component {
     ref.remove();
   }
 
+  // if use arrow function, do not need to bind in the constructor
   handleChecked = (e, id) => {
     e.preventDefault();
     const ref = firebase.database().ref(`ToDo/${this.props.userID}/${id}`);
@@ -65,13 +66,11 @@ class Home extends React.Component {
   render() {
     const { user, toDoList } = this.props;
 
-    let unCompletedList;
-    unCompletedList = toDoList.filter((item) => {
+    const unCheckedList = toDoList.filter((item) => {
       return item.completed === false;
     });
 
-    let completedList;
-    completedList = toDoList.filter((item) => {
+    const checkedList = toDoList.filter((item) => {
       return item.completed === true;
     });
 
@@ -109,13 +108,13 @@ class Home extends React.Component {
           </div>
         </form>
 
-        {unCompletedList.length ? (
+        {unCheckedList.length ? (
           <h3 className="text-center mt-3">
-            Tasks ({unCompletedList.length})
+            Tasks ({unCheckedList.length})
           </h3>
         ) : null}
 
-        {unCompletedList.map((item) => (
+        {unCheckedList.map((item) => (
           <ToDoItem
             id={item.id}
             item={item.item}
@@ -127,12 +126,12 @@ class Home extends React.Component {
           />
         ))}
 
-        {completedList.length ? (
+        {checkedList.length ? (
           <h3 className="text-center mt-3">
-            Completed ({completedList.length})
+            Completed ({checkedList.length})
           </h3>
         ) : null}
-        {completedList.map((item) => (
+        {checkedList.map((item) => (
           <ToDoItem
             id={item.id}
             item={item.item}

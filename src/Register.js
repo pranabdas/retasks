@@ -85,7 +85,7 @@ class Register extends React.Component {
                   className="form-control"
                   type="email"
                   id="email"
-                  placeholder="mail@example.com"
+                  placeholder="name@example.com"
                   name="email"
                   required
                   value={this.state.email}

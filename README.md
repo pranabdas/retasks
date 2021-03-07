@@ -1,6 +1,6 @@
 # ReTasks
 
-This app helps you remember and manage your tasks. Visit the [webapp here](
+This app helps you remember and manage your tasks. Try the [webapp here](
 https://retasks.netlify.app).
 
 Dependencies:

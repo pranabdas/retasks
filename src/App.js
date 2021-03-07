@@ -13,7 +13,8 @@ class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      user: "", // this is the display name
+      user: null, // this is display name
+      userID: null,
       toDoList: [], // if a state is not initialized,
     }; // results undefined error during initial render
   }
@@ -42,13 +43,12 @@ class App extends React.Component {
           }
 
           toDoList.sort((a, b) => b.lastUpdated - a.lastUpdated);
-
           this.setState({ toDoList: toDoList });
         });
       } else {
         this.setState({
-          user: "",
-          userID: "",
+          user: null,
+          userID: null,
         });
       }
     });
@@ -71,8 +71,8 @@ class App extends React.Component {
   logOutUser = (e) => {
     e.preventDefault();
     this.setState({
-      user: "",
-      userID: "",
+      user: null,
+      userID: null,
     });
 
     firebase
@@ -108,7 +108,7 @@ class App extends React.Component {
           <NotFound default />
         </Router>
         <footer className="mt-5">
-          Made with <span className="love">♥</span> by {" "}
+          Made with <span className="love">♥</span> by{" "}
           <a href="https://pranabdas.github.io/">Pranab</a>.
         </footer>
       </>
