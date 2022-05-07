@@ -32,17 +32,21 @@ class Register extends React.Component {
   handleRegistration(e) {
     e.preventDefault();
 
-    firebase
-      .auth()
-      .createUserWithEmailAndPassword(this.state.email, this.state.passOne)
-      .then(() => {
-        this.props.registerUser(this.state.user);
-      })
-      .catch((error) => {
-        error.message
-          ? this.setState({ errorMessage: error.message })
-          : this.setState({ errorMessage: null });
-      });
+    if (this.state.passOne === this.state.passTwo) {
+      firebase
+        .auth()
+        .createUserWithEmailAndPassword(this.state.email, this.state.passOne)
+        .then(() => {
+          this.props.registerUser(this.state.user);
+        })
+        .catch((error) => {
+          error.message
+            ? this.setState({ errorMessage: error.message })
+            : this.setState({ errorMessage: null });
+        });
+    } else {
+      this.setState({ errorMessage: "Please type confirmation password same as original password." })
+    }
   }
 
   render() {
