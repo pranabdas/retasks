@@ -10,8 +10,8 @@ function Register({ registerUser }) {
     email: "",
     passOne: "",
     passTwo: "",
-    errorMessage: null,
   });
+  const [errorMessage, setErrorMessage] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -19,13 +19,12 @@ function Register({ registerUser }) {
   }
 
   useEffect(() => {
-    let errorMessage = null;
     if ((state.passTwo !== "") &&
       (state.passTwo !== state.passOne)) {
-      errorMessage = "The passwords do not match!"
+      setErrorMessage("The passwords do not match!");
+    } else {
+      setErrorMessage(null);
     }
-
-    setState({ ...state, errorMessage });
   }, [state.passOne, state.passTwo]);
 
   const handleRegistration = (e) => {
@@ -40,11 +39,11 @@ function Register({ registerUser }) {
         })
         .catch((error) => {
           error.message
-            ? setState({ ...state, errorMessage: error.message })
-            : setState({ ...state, errorMessage: null });
+            ? setErrorMessage(error.message)
+            : setErrorMessage(null);
         });
     } else {
-      setState({ ...state, errorMessage: "Please type confirmation password same as original password." })
+      setErrorMessage("Please type confirmation password same as original password.")
     }
   }
 
@@ -61,8 +60,8 @@ function Register({ registerUser }) {
         <div className="card bg-light col-lg-8">
           <div className="card-body">
             <section className="col-sm-12 form-group">
-              {state.errorMessage && (
-                <FormError message={state.errorMessage} />
+              {errorMessage && (
+                <FormError message={errorMessage} />
               )}
 
               <label className="form-control-label" htmlFor="user">
