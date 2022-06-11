@@ -13,14 +13,13 @@ function App() {
   const [state, setState] = useState({
     user: null,
     userID: null,
-    toDoList: [],
   });
+  const [toDoList, setToDoList] = useState([]);
 
   useEffect(() => {
     firebase.auth().onAuthStateChanged((FBUser) => {
       if (FBUser) {
         setState({
-          ...state,
           user: FBUser.displayName,
           userID: FBUser.uid,
         });
@@ -41,17 +40,17 @@ function App() {
           }
 
           toDoList.sort((a, b) => b.lastUpdated - a.lastUpdated);
-          setState({ ...state, toDoList: toDoList });
+          setToDoList(toDoList);
         });
       } else {
         setState({
           user: null,
           userID: null,
-          toDoList: [],
         });
+        setToDoList([]);
       }
     });
-  }, [state.toDoList, state.userID])
+  }, [toDoList]);
 
   const registerUser = (user) => {
     firebase.auth().onAuthStateChanged((FBUser) => {
@@ -89,6 +88,17 @@ function App() {
     const date = new Date();
     const lastUpdated = date.getTime();
     ref.push({ item: item, lastUpdated: lastUpdated, completed: false });
+
+    // maintain a pseudo list locally instead of subscribing to remote db
+    let newToDoList = [...toDoList];
+    newToDoList.push({
+      item: item,
+      lastUpdated: lastUpdated,
+      completed: false,
+    });
+
+    newToDoList.sort((a, b) => b.lastUpdated - a.lastUpdated);
+    setToDoList(newToDoList);
   };
 
   return (
@@ -102,7 +112,7 @@ function App() {
           path="/home"
           user={state.user}
           addToDo={addToDo}
-          toDoList={state.toDoList}
+          toDoList={toDoList}
           userID={state.userID}
         />
         <NotFound default />
