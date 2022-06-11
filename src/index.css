@@ -98,3 +98,7 @@ color: red;
 text-decoration: none;
 font-style: normal;
 }
+
+a {
+  text-decoration: none;
+}

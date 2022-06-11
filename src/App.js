@@ -18,7 +18,7 @@ function App() {
   const [updating, setUpdating] = useState(false);
   const navigate = useNavigate();
 
-  // there is memory leak, need to unsubscribe unmounted components
+  // there could be memory leak, need to unsubscribe unmounted components
   useEffect(() => {
     firebase.auth().onAuthStateChanged((FBUser) => {
       if (FBUser) {

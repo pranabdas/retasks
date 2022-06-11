@@ -17,16 +17,16 @@ function Welcome({ user }) {
 
         {user ? (
           <div className="text-center">
-            <Link to="/home" className="btn btn-primary mr-3">
+            <Link to="/home" className="btn btn-primary">
               Show Task List
             </Link>
           </div>
         ) : (
           <div className="text-center">
-            <Link to="/login" className="btn btn-primary mr-3">
+            <Link to="/login" className="btn btn-primary me-3">
               Login
             </Link>
-            <Link to="/register" className="btn btn-primary mr-3">
+            <Link to="/register" className="btn btn-primary me-3">
               Register
             </Link>
           </div>
