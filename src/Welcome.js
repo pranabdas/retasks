@@ -1,9 +1,6 @@
-// This is the landing page of this app
-import React from "react";
 import { Link } from "@reach/router";
 
-class Welcome extends React.Component {
-  render() {
+function Welcome({ user }) {
     return (
       <div className="container text-justified">
         <h1 className="text-center mt-3">ReTasks</h1>
@@ -18,7 +15,7 @@ class Welcome extends React.Component {
           <a href="https://github.com/pranabdas/retasks">GitHub</a>.
         </p>
 
-        {this.props.user ? (
+        {user ? (
           <div className="text-center">
             <Link to="/home" className="btn btn-primary mr-3">
               Show Task List
@@ -36,7 +33,6 @@ class Welcome extends React.Component {
         )}
       </div>
     );
-  }
 }
 
 export default Welcome;

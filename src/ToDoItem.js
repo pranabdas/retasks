@@ -1,13 +1,9 @@
-import React from "react";
-
-class ToDoItem extends React.Component {
-  render() {
+function ToDoItem({ item, id, completed, handleChecked, deleteItem }) {
     const checkedStyle = {
       color: "#cdcdcd",
       textDecoration: "line-through",
     };
-
-    const { item, id, completed, handleChecked, deleteItem } = this.props;
+    
     return (
       <div className="container todo-item col-sm-8">
         <li>
@@ -27,7 +23,6 @@ class ToDoItem extends React.Component {
         </li>
       </div>
     );
-  }
 }
 
 export default ToDoItem;
