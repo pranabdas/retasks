@@ -1,4 +1,4 @@
-import React from "react";
+import { useState, useEffect } from "react";
 import { Router, navigate } from "@reach/router";
 
 import firebase from "./Firebase";
@@ -9,20 +9,18 @@ import Login from "./Login";
 import Home from "./Home";
 import NotFound from "./404";
 
-class App extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      user: null, // this is display name
-      userID: null,
-      toDoList: [], // if a state is not initialized,
-    }; // results undefined error during initial render
-  }
+function App() {
+  const [state, setState] = useState({
+    user: null,
+    userID: null,
+  });
+  const [toDoList, setToDoList] = useState([]);
+  const [updating, setUpdating] = useState(false);
 
-  componentDidMount() {
+  useEffect(() => {
     firebase.auth().onAuthStateChanged((FBUser) => {
       if (FBUser) {
-        this.setState({
+        setState({
           user: FBUser.displayName,
           userID: FBUser.uid,
         });
@@ -43,23 +41,26 @@ class App extends React.Component {
           }
 
           toDoList.sort((a, b) => b.lastUpdated - a.lastUpdated);
-          this.setState({ toDoList: toDoList });
+          setToDoList(toDoList);
+          setUpdating(false);
         });
       } else {
-        this.setState({
+        setState({
           user: null,
           userID: null,
         });
+        setToDoList([]);
       }
     });
-  }
+  }, [updating]);
 
-  registerUser = (user) => {
+  const registerUser = (user) => {
     firebase.auth().onAuthStateChanged((FBUser) => {
       FBUser.updateProfile({
         displayName: user,
       }).then(() => {
-        this.setState({
+        setState({
+          ...state,
           user: FBUser.displayName,
           userID: FBUser.uid,
         });
@@ -68,9 +69,10 @@ class App extends React.Component {
     });
   };
 
-  logOutUser = (e) => {
+  const logOutUser = (e) => {
     e.preventDefault();
-    this.setState({
+    setState({
+      ...state,
       user: null,
       userID: null,
     });
@@ -83,37 +85,38 @@ class App extends React.Component {
       });
   };
 
-  addToDo = (item) => {
-    const ref = firebase.database().ref(`ToDo/${this.state.userID}`);
+  const addToDo = (item) => {
+    const ref = firebase.database().ref(`ToDo/${state.userID}`);
     const date = new Date();
     const lastUpdated = date.getTime();
     ref.push({ item: item, lastUpdated: lastUpdated, completed: false });
+
+    setUpdating(true);
   };
 
-  render() {
-    return (
-      <>
-        <Navigation user={this.state.user} logOutUser={this.logOutUser} />
-        <Router>
-          <Welcome path="/" user={this.state.user} />
-          <Register path="/register" registerUser={this.registerUser} />
-          <Login path="/login" />
-          <Home
-            path="/home"
-            user={this.state.user}
-            addToDo={this.addToDo}
-            toDoList={this.state.toDoList}
-            userID={this.state.userID}
-          />
-          <NotFound default />
-        </Router>
-        <footer className="mt-5">
-          Made with <span className="love">♥</span> by{" "}
-          <a href="https://pranabdas.github.io/">Pranab</a>.
-        </footer>
-      </>
-    );
-  }
+  return (
+    <>
+      <Navigation user={state.user} logOutUser={logOutUser} />
+      <Router>
+        <Welcome path="/" user={state.user} />
+        <Register path="/register" registerUser={registerUser} />
+        <Login path="/login" />
+        <Home
+          path="/home"
+          user={state.user}
+          addToDo={addToDo}
+          toDoList={toDoList}
+          userID={state.userID}
+          setUpdating={setUpdating}
+        />
+        <NotFound default />
+      </Router>
+      <footer className="mt-5">
+        Made with <span className="love">♥</span> by{" "}
+        <a href="https://pranabdas.github.io/">Pranab</a>.
+      </footer>
+    </>
+  );
 }
 
 export default App;

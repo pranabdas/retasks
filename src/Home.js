@@ -2,7 +2,7 @@ import { useState } from "react";
 import firebase from "./Firebase";
 import ToDoItem from "./ToDoItem";
 
-function Home({ user, toDoList, addToDo, userID }) {
+function Home({ user, toDoList, addToDo, userID, setUpdating }) {
   const [state, setState] = useState({
     item: "",
   });
@@ -25,6 +25,7 @@ function Home({ user, toDoList, addToDo, userID }) {
     e.preventDefault();
     const ref = firebase.database().ref(`ToDo/${userID}/${id}`);
     ref.remove();
+    setUpdating(true);
   }
 
   // if use arrow function, do not need to bind in the constructor
@@ -54,6 +55,7 @@ function Home({ user, toDoList, addToDo, userID }) {
     //     item: updatedItem.item,
     //     lastUpdated: lastUpdated,
     //   });
+    setUpdating(true);
   };
 
   const unCheckedList = toDoList.filter((item) => {
