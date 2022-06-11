@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Router, navigate } from "@reach/router";
+import { Routes, Route, useNavigate } from "react-router-dom";
 
 import firebase from "./Firebase";
 import Navigation from "./Navigation";
@@ -16,7 +16,9 @@ function App() {
   });
   const [toDoList, setToDoList] = useState([]);
   const [updating, setUpdating] = useState(false);
+  const navigate = useNavigate();
 
+  // there is memory leak, need to unsubscribe unmounted components
   useEffect(() => {
     firebase.auth().onAuthStateChanged((FBUser) => {
       if (FBUser) {
@@ -97,20 +99,27 @@ function App() {
   return (
     <>
       <Navigation user={state.user} logOutUser={logOutUser} />
-      <Router>
-        <Welcome path="/" user={state.user} />
-        <Register path="/register" registerUser={registerUser} />
-        <Login path="/login" />
-        <Home
-          path="/home"
-          user={state.user}
-          addToDo={addToDo}
-          toDoList={toDoList}
-          userID={state.userID}
-          setUpdating={setUpdating}
+      <Routes>
+        <Route path="/" element={<Welcome user={state.user} />} />
+        <Route
+          path="/register"
+          element={<Register registerUser={registerUser} />}
         />
-        <NotFound default />
-      </Router>
+        <Route path="/login" element={<Login />} />
+        <Route
+          path="/home"
+          element={
+            <Home
+              user={state.user}
+              addToDo={addToDo}
+              toDoList={toDoList}
+              userID={state.userID}
+              setUpdating={setUpdating}
+            />
+          }
+        />
+        <Route path="*" element={<NotFound default />} />
+      </Routes>
       <footer className="mt-5">
         Made with <span className="love">♥</span> by{" "}
         <a href="https://pranabdas.github.io/">Pranab</a>.

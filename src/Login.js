@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link, navigate } from "@reach/router";
+import { Link, useNavigate } from "react-router-dom";
 import FormError from "./FormError";
 import firebase from "./Firebase";
 
@@ -8,6 +8,7 @@ function Login() {
     email: "",
     password: "",
   });
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
